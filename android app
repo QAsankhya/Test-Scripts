@@ -1,0 +1,1045 @@
+package liveApp;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.html5.Location;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.AndroidElement;
+
+public class gitVersion
+{
+
+	public AndroidDriver<AndroidElement> driver;
+	private final String PACKAGE = "com.twib.online";
+	private final String EMP_USERNAME = "piklu";
+	private final String EMP_PWD = "123456";
+	
+	private final String COMPANY_USERNAME = "testcompany3333";
+	private final String COMPANY_PWD = "123456";
+	
+	private final String OLD_PWD = EMP_PWD;
+	private final String NEW_PWD = "654321";
+	String folder_name;
+	String folder_location;
+	DateFormat df;
+	
+	
+	@BeforeClass
+	public void launchTwib() {
+		
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability("platformName", "Android");
+        
+//        emulator
+        capabilities.setCapability("platformVersion", "7.0");
+        capabilities.setCapability("deviceName", "GIONEE X1");
+
+        capabilities.setCapability("autoGrantPermissions", true);
+
+//        //mi A1
+       //capabilities.setCapability("platformVersion", "8.1.0");
+       // capabilities.setCapability("deviceName", "Mi A1");
+        
+        capabilities.setCapability("autoGrantPermissions", true);
+        //capabilities.setCapability("deviceName", "Android Emulator");
+        capabilities.setCapability("appPackage", PACKAGE);
+        capabilities.setCapability("appActivity", "com.twib.online.activity.SplashActivity");
+        
+        ////////////////////////////////////////////
+        //['full','gsm', 'edge', 'hscsd', 'gprs', 'umts', 'hsdpa', 'lte', 'evdo']
+        capabilities.setCapability("networkSpeed", "full");
+//        capabilities.setCapability("gpsEnabled", false);
+        capabilities.setCapability("noReset", true);
+        
+        driver = new AndroidDriver<AndroidElement>(capabilities);
+        
+        
+        
+	}
+	
+	@Test
+	public void TwibTest() throws Exception {		
+		
+		//employee
+		
+//		Login(EMP_USERNAME,EMP_PWD); driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+		CheckinAdd(); System.out.println("Adding checkin tested"); driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);		
+		CheckinList();System.out.println(" checkin list tested"); driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		CheckinSearch(); System.out.println("checkin search tested");driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		CheckinDelete();System.out.println("Deleting checkin tested"); driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		WorkDetails();System.out.println("work details tested"); driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		WorkCompleate();System.out.println("work complete tested"); driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		WorktoCheckin();System.out.println("Work to checkin tested"); driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+ 		ExpenseAdd();System.out.println("Adding expense tested"); driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		ExpenseList();System.out.println("Expense list tested"); driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		ExpenseUpdate();System.out.println("Expense update tested"); driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+		ExpenseDelete();System.out.println("Expense deletion tested"); driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+		AttendenceStartEnd();System.out.println("Start/End attendance tested"); driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		AttendenceList();System.out.println("attendance list tested"); driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		LocationOnOff();System.out.println("Adding checkin tested"); driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+		ModifyProfile();System.out.println("Profile modification tested");  driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);		
+		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+		ChangePassword(NEW_PWD,OLD_PWD);System.out.println("Password change tested"); driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+		
+		Logout();
+	
+	}
+	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////	
+	
+    public void ClickMenu() 
+	{
+    	driver.findElementByAccessibilityId("Open navigation drawer").click();
+    	//home
+    	//	/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[1]/android.widget.CheckedTextView
+    	
+	}
+    
+    
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+   /////////////////////////////////////////////////
+    
+    public void GotoDashboard() {
+    	driver.findElementByAccessibilityId("Open navigation drawer").click();
+		driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[1]/android.widget.CheckedTextView").click();
+    }
+    
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	public void ChangePassword(String oLD_PWD2, String nEW_PWD2) {
+
+		//menu click
+		ClickMenu();
+    	driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[8]/android.widget.CheckedTextView").click();
+ 
+		
+		//com.twib.online:id/update_profile_btn_change_password
+		driver.findElementById(PACKAGE+":id/update_profile_btn_change_password").click();
+		
+		//com.twib.online:id/change_password_edt_old_password
+		//com.twib.online:id/change_password_edt_new_password
+		//com.twib.online:id/change_password_edt_re_new_password
+		AndroidElement change_password_edt_old_password = (AndroidElement) new WebDriverWait(driver, 30)
+                .until(ExpectedConditions.visibilityOfElementLocated(By.id(PACKAGE+":id/change_password_edt_old_password")));
+		change_password_edt_old_password.sendKeys(oLD_PWD2);
+		
+		driver.findElementById(PACKAGE+":id/change_password_edt_new_password").sendKeys(nEW_PWD2);
+		driver.findElementById(PACKAGE+":id/change_password_edt_re_new_password").sendKeys(nEW_PWD2);
+		
+		driver.hideKeyboard();
+		//com.twib.online:id/change_password_btn_change
+		driver.findElementById(PACKAGE+":id/change_password_btn_change").click();
+		
+		//sucess msg
+		//com.twib.online:id/content_text
+		String message= driver.findElementById("com.twib.online:id/content_text").getText();
+		System.out.println("The message is : " +message);
+		
+		//confirm button
+		AndroidElement confirm_button = (AndroidElement) new WebDriverWait(driver, 30)
+	              .until(ExpectedConditions.visibilityOfElementLocated(By.id(PACKAGE+":id/confirm_button")));
+		confirm_button.click();
+		
+		
+	}
+	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////	
+
+	public void Login(String Username, String Password) {
+		
+		AndroidElement usernametxt = (AndroidElement) new WebDriverWait(driver, 30)
+                .until(ExpectedConditions.visibilityOfElementLocated(By.id(PACKAGE+":id/login_edt_username")));
+		
+		//AndroidElement usernametxt = (AndroidElement) driver.findElementById("com.twib.online:id/login_edt_username");
+		usernametxt.sendKeys(Username);
+		
+		driver.findElementById(PACKAGE+":id/login_edt_password").sendKeys(Password);
+
+		//driver.hideKeyboard();
+		
+		driver.findElementById(PACKAGE+":id/login_btn_login_now").click();
+		
+		
+		
+	}
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////
+	public void CheckinAdd() {
+	
+		///check-in from dashboard
+		AndroidElement checkin = (AndroidElement) new WebDriverWait(driver, 30)
+                .until(ExpectedConditions.visibilityOfElementLocated(By.id("com.twib.online:id/home_btn_checkin")));
+		checkin.click();
+		
+		//check-in from menu
+		//com.twib.online:id/checkin_list_img_add
+		
+		
+		AndroidElement add_checkin_edt_name = (AndroidElement) new WebDriverWait(driver, 30)
+                .until(ExpectedConditions.visibilityOfElementLocated(By.id(PACKAGE+":id/add_checkin_edt_name")));
+		add_checkin_edt_name.sendKeys(new Random().nextInt(1000)+" Dummy check-in");
+		driver.hideKeyboard();
+
+		AndroidElement add_checkin_edt_details = (AndroidElement) driver.findElementById(PACKAGE+":id/add_checkin_edt_details");
+		add_checkin_edt_details.sendKeys("This is some details of check-in");
+		driver.hideKeyboard();
+		
+		//location, check if not already fetched by the system
+		//com.twib.online:id/add_checkin_edt_location
+		AndroidElement add_checkin_edt_location = (AndroidElement) new WebDriverWait(driver, 10)
+                .until(ExpectedConditions.visibilityOfElementLocated(By.id(PACKAGE+":id/add_checkin_edt_location")));
+		
+		String LocationTxt = add_checkin_edt_location.getText();
+		if(LocationTxt.equals(null) || LocationTxt.equals("")){
+			add_checkin_edt_location.sendKeys("Some Dummy Locations");
+			driver.hideKeyboard();
+		}	
+		
+		driver.findElementById("com.twib.online:id/add_checkin_edt_photo").click();;
+
+		camera_click();
+
+		AndroidElement checkin_button = (AndroidElement) new WebDriverWait(driver, 30)
+                .until(ExpectedConditions.visibilityOfElementLocated(By.id("com.twib.online:id/add_checkin_btn_add_checkin")));
+		
+		checkin_button.click();
+		
+	
+	
+		AndroidElement checkin_conf = (AndroidElement) new WebDriverWait(driver, 30)
+                .until(ExpectedConditions.visibilityOfElementLocated(By.id("com.twib.online:id/success_frame")));
+		
+		String confirmation_message= driver.findElementById("com.twib.online:id/content_text").getText();
+		
+		if(checkin_conf.isDisplayed())
+		{
+			System.out.println("Check in Status is : " +confirmation_message);
+		}				
+		else {
+			System.out.println("there might be a problem in adding check-in");
+		}
+		driver.findElementById("com.twib.online:id/confirm_button").click();
+		
+	}
+
+	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////
+	
+	public void CheckinList() {
+
+		
+		ClickMenu(); //menu click
+		driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[2]/android.widget.CheckedTextView").click();
+		
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+	
+		//counting the list
+		
+        //List<AndroidElement> Checkins = (List<AndroidElement>) driver.findElementsByClassName("android.widget.TextView");
+		List<AndroidElement> Checkins = (List<AndroidElement>) driver.findElementsById(PACKAGE+":id/checkin_grid_txt_title");
+		System.out.println("Toatl Check-ins Found : " + Checkins.size());
+        //need to add the 1st 2 in the list
+		
+		if(Checkins.size()>0) {
+			//heading click
+			//com.twib.online:id/checkin_list_object_one_txt_title
+			
+
+			driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.RelativeLayout/android.widget.ScrollView/android.widget.LinearLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout[2]/android.widget.RelativeLayout/android.widget.FrameLayout/android.widget.RelativeLayout").click();
+			
+			//check-in details page
+			//AndroidElement checkin_details_txt_date = (AndroidElement) 
+			new WebDriverWait(driver, 30)
+	        .until(ExpectedConditions.visibilityOfElementLocated(By.id(PACKAGE+":id/checkin_details_txt_date")));
+			
+			
+			//details pop up
+			driver.findElementById(PACKAGE+":id/checkin_details_txt_details").click();
+			driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+			driver.findElementById(PACKAGE+":id/popup_checkin_btn_dismiss").click();
+			
+			//delete button
+			//com.twib.online:id/checkin_details_fab_delete
+			//com.twib.online:id/cancel_button
+			//com.twib.online:id/confirm_button
+			driver.findElementById(PACKAGE+":id/checkin_details_fab_delete").click();
+			driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+			driver.findElementById(PACKAGE+":id/cancel_button").click();
+		}
+		
+		GotoDashboard();
+		
+	}
+	
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////
+	
+	public void CheckinSearch() {
+
+		ClickMenu(); //menu click
+		driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[3]/android.widget.CheckedTextView").click();
+
+		//calender click
+		//com.twib.online:id/my_checkin_txt_date
+		driver.findElementById(PACKAGE+":id/my_checkin_txt_date").click();
+		//calender ok button
+		//android:id/button1		
+		driver.findElementById("android:id/button1").click();
+		
+
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		//com.twib.online:id/checkin_grid_txt_title
+		List<AndroidElement> Checkins = (List<AndroidElement>) driver.findElementsById(PACKAGE+":id/checkin_grid_txt_title");
+		System.out.println("Toatl Check-ins Found : " + Checkins.size());
+		
+		if(Checkins.size()>0) {
+			//heading click
+			driver.findElementById(PACKAGE+":id/checkin_grid_txt_title").click();
+					
+			//check-in details page
+			//AndroidElement checkin_details_txt_date = (AndroidElement) 
+			new WebDriverWait(driver, 30)
+	        .until(ExpectedConditions.visibilityOfElementLocated(By.id(PACKAGE+":id/checkin_details_txt_date")));
+		}
+						
+		
+		//backtoDashBoard
+		ClickMenu();
+		driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[1]/android.widget.CheckedTextView").click();
+
+		
+	}
+	
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////
+
+	
+	public void CheckinDelete() {
+		
+		ClickMenu(); //menu click
+		driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[2]/android.widget.CheckedTextView").click();
+		
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+	
+		//counting the list
+		
+        //List<AndroidElement> Checkins = (List<AndroidElement>) driver.findElementsByClassName("android.widget.TextView");
+		List<AndroidElement> Checkins = (List<AndroidElement>) driver.findElementsByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.RelativeLayout/android.widget.ScrollView/android.widget.LinearLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout[2]/android.widget.RelativeLayout/android.widget.FrameLayout/android.widget.RelativeLayout");
+		System.out.println("Toatl Check-ins Found during operation : " + Checkins.size());
+		Random rnd = new Random();
+		int rndInt = rnd.nextInt(Checkins.size());
+		((org.openqa.selenium.WebElement) Checkins.get(rndInt)).click();
+        //need to add the 1st 2 in the list
+		
+		//heading click
+//		driver.findElementById(PACKAGE+":id/checkin_list_object_one_txt_title").click();
+		
+		//check-in details page
+		//AndroidElement checkin_details_txt_date = (AndroidElement) 
+//		new WebDriverWait(driver, 30)
+//        .until(ExpectedConditions.visibilityOfElementLocated(By.id(PACKAGE+":id/checkin_details_txt_date")));
+		
+		
+//		//details pop up
+//		driver.findElementById(PACKAGE+":id/checkin_details_txt_details").click();
+//		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+//		driver.findElementById(PACKAGE+":id/popup_checkin_btn_dismiss").click();
+		
+		//cancel delete
+		//com.twib.online:id/cancel_button
+		driver.findElementById(PACKAGE+":id/checkin_details_fab_delete").click();
+		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+		driver.findElementById(PACKAGE+":id/cancel_button").click();
+		
+		//delete button
+		//com.twib.online:id/checkin_details_fab_delete
+		//com.twib.online:id/confirm_button
+		driver.findElementById(PACKAGE+":id/checkin_details_fab_delete").click();
+		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+		driver.findElementById(PACKAGE+":id/confirm_button").click();
+				
+		GotoDashboard();
+
+	}
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////	
+	
+	public void WorkDetails()
+	{
+		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+		
+		ClickMenu();
+
+		driver.findElement(By.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[1]/android.widget.CheckedTextView")).click();
+		
+		driver.findElement(By.id("com.twib.online:id/work_recyclerview"));
+		
+		
+			List<AndroidElement> Counts = (List<AndroidElement>) driver.findElements(By.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.support.v7.widget.RecyclerView"));
+		
+			System.out.println("Toatal Work Found : " + Counts.size());
+		
+			if(Counts.size()>0) { //check if there is work present
+			//com.twib.online:id/list_item_home_txt_title
+			driver.findElementById(PACKAGE+":id/list_item_home_txt_title").click();
+			
+			
+			
+			//work details popup check and print work type and end
+			check_work_type();
+			
+
+		}
+		
+	}
+	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////
+	
+	public void WorkCompleate() {
+		
+		//check total available work
+		List<AndroidElement> Counts = (List<AndroidElement>) driver.findElementsById(PACKAGE+":id/list_item_home_txt_title");
+		//System.out.println("Toatal Work Found : " + Counts.size());
+		
+		if(Counts.size()>0) { //check if there is work present
+			//mark as done
+			///hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[1]/android.widget.RelativeLayout/android.widget.TextView
+	
+			//com.twib.online:id/overflow_menu
+			driver.findElementById("com.twib.online:id/overflow_menu").click();
+			///hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.support.v7.widget.RecyclerView/android.widget.RelativeLayout/android.widget.ImageButton
+			
+			driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+	
+			//compleate work
+			///hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[1]/android.widget.RelativeLayout/android.widget.TextView
+			driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[1]/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.TextView").click();
+		
+			
+			//work done popup check
+			AndroidElement conf_popup = (AndroidElement) new WebDriverWait(driver, 10)
+	                .until(ExpectedConditions.visibilityOfElementLocated(By.id("com.twib.online:id/mask_right")));
+			
+			//work details
+			String msg=driver.findElement(By.id("com.twib.online:id/content_text")).getText();
+			
+			if(conf_popup.isDisplayed())
+			{
+				System.out.println(msg);
+			}
+	
+			driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+			driver.findElementById("com.twib.online:id/confirm_button").click();
+		}else {
+			System.out.println("No Work Found for Compleation");
+		}
+	}
+	
+	//#########################################################################################
+	
+	public void WorktoCheckin() 
+	{
+		
+		ClickMenu();
+		
+		driver.findElement(By.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[1]/android.widget.CheckedTextView")).click();
+
+		driver.findElementById(PACKAGE+":id/list_item_home_txt_title").click();
+		List<AndroidElement> Counts = (List<AndroidElement>) driver.findElementsById(PACKAGE+":id/success_tick");
+
+		{
+			
+		if(Counts.size()>0)
+		{
+			String work_name= driver.findElementById("com.twib.online:id/title_text").getText();
+			String work_details= driver.findElementById("com.twib.online:id/content_text").getText();
+
+			driver.findElementById("com.twib.online:id/confirm_button").click();
+			System.out.println("user is assigned work without customer");
+		
+			//com.twib.online:id/overflow_menu
+			
+			driver.findElementById("com.twib.online:id/overflow_menu").click();
+			
+			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+			
+			//convert to check-in
+			///hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[2]/android.widget.RelativeLayout/android.widget.TextView
+			driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[2]/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.TextView").click();
+			
+	
+			//check-in form //////////////////////
+			//com.twib.online:id/add_checkin_edt_location
+					
+		
+			
+		String checkin_name=driver.findElementById("com.twib.online:id/add_checkin_edt_name").getText();
+		String checkin_details=driver.findElementById("com.twib.online:id/add_checkin_edt_details").getText();
+
+		
+		
+		if(checkin_name.matches(work_name) && checkin_details.matches(work_details))
+		{
+			System.out.println("Checkin name and details matches with work name and details");
+		}
+		
+		driver.findElementById("com.twib.online:id/add_checkin_edt_photo").click();;
+		camera_click();
+			
+		
+			AndroidElement checkin_button = (AndroidElement) new WebDriverWait(driver, 30)
+	                .until(ExpectedConditions.visibilityOfElementLocated(By.id("com.twib.online:id/add_checkin_btn_add_checkin")));
+			
+			checkin_button.click();
+			
+		
+		
+			AndroidElement checkin_conf = (AndroidElement) new WebDriverWait(driver, 30)
+	                .until(ExpectedConditions.visibilityOfElementLocated(By.id("com.twib.online:id/success_frame")));
+			
+			String confirmation_message= driver.findElementById("com.twib.online:id/content_text").getText();
+			
+			if(checkin_conf.isDisplayed())
+			{
+				System.out.println("Check in Status is : " +confirmation_message);
+			}				
+			else {
+				System.out.println("there might be a problem in adding check-in");
+			}
+			
+			driver.findElementById("com.twib.online:id/confirm_button").click();
+
+		}
+		
+		
+		else  
+		
+		{	
+			
+			String work_name2= driver.findElementById("com.twib.online:id/work_details_popup_txt_work_name").getText();
+			String work_details2= driver.findElementById("com.twib.online:id/work_details_popup_txt_details").getText();
+			
+			driver.findElementById("com.twib.online:id/popup_checkin_btn_dismiss").click();
+			System.out.println("user is assigned work with customer");
+			driver.findElementById("com.twib.online:id/overflow_menu").click();
+			
+			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+			
+			//convert to check-in
+			///hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[2]/android.widget.RelativeLayout/android.widget.TextView
+			driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[2]/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.TextView").click();
+			
+	
+			//check-in form //////////////////////
+			//com.twib.online:id/add_checkin_edt_location
+					
+		
+			
+		String checkin_name=driver.findElementById("com.twib.online:id/add_checkin_edt_name").getText();
+		String checkin_details=driver.findElementById("com.twib.online:id/add_checkin_edt_details").getText();
+
+		
+		
+		if(checkin_name.matches(work_name2) && checkin_details.matches(work_details2))
+		{
+			System.out.println("Checkin name and details matches with work name and details");
+		}
+		
+		driver.findElementById("com.twib.online:id/add_checkin_edt_photo").click();;
+		camera_click();
+			
+		
+			AndroidElement checkin_button = (AndroidElement) new WebDriverWait(driver, 30)
+	                .until(ExpectedConditions.visibilityOfElementLocated(By.id("com.twib.online:id/add_checkin_btn_add_checkin")));
+			
+			checkin_button.click();
+			
+		
+		
+			AndroidElement checkin_conf = (AndroidElement) new WebDriverWait(driver, 30)
+	                .until(ExpectedConditions.visibilityOfElementLocated(By.id("com.twib.online:id/success_frame")));
+			
+			String confirmation_message= driver.findElementById("com.twib.online:id/content_text").getText();
+			
+			if(checkin_conf.isDisplayed())
+			{
+				System.out.println("Check in Status is : " +confirmation_message);
+			}				
+			else {
+				System.out.println("there might be a problem in adding check-in");
+			}
+			
+			driver.findElementById("com.twib.online:id/confirm_button").click();
+
+		}
+		}
+		
+	}
+	
+	
+/////////////////////////////////////////////////////////////////////////////////////////
+	public void AttendenceStartEnd() {
+		
+		//menu click
+		ClickMenu();
+		driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[6]/android.widget.CheckedTextView").click();
+		
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		  
+		//checking current status
+		String status1= driver.findElementById("com.twib.online:id/attendace_switch_attendance").getText();
+		System.out.println(status1);
+		
+		//start/end attendence
+		driver.findElementById("com.twib.online:id/attendace_switch_attendance").click();
+		
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		
+		String status2= driver.findElementById("com.twib.online:id/attendace_switch_attendance").getText();
+		System.out.println(status2);
+		
+		//????????????????????? Need to control start/end
+		
+	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////	
+	
+	public void AttendenceList() {
+		
+		//menu click
+		ClickMenu();
+		driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[6]/android.widget.CheckedTextView").click();
+
+		
+		//password button click
+		driver.findElementById(PACKAGE+":id/attendace_btn_past_attendance").click();
+		
+		//past_attendance_txt_date
+		List<AndroidElement> Checkins = (List<AndroidElement>) driver.findElementsById(PACKAGE+":id/past_attendance_txt_date");
+		System.out.println("Toatl Attendence Found : " + Checkins.size());
+		
+	}
+	
+	
+	
+	
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	public void ExpenseAdd() {
+		
+		//menu clicks
+		ClickMenu();
+		driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[1]/android.widget.CheckedTextView").click();
+		
+		//dashboard button click
+		driver.findElementById(PACKAGE+":id/home_btn_expense").click();
+
+		
+		//View Report
+		///hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.support.v4.widget.DrawerLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.support.v7.widget.RecyclerView/android.widget.RelativeLayout/android.widget.FrameLayout[2]/android.widget.LinearLayout/android.widget.LinearLayout[2]/android.widget.TextView[2]
+	
+		
+		AndroidElement add_expense_edt_name = (AndroidElement) new WebDriverWait(driver, 30)
+                .until(ExpectedConditions.visibilityOfElementLocated(By.id(PACKAGE+":id/add_expense_edt_name")));
+		add_expense_edt_name.sendKeys(new Random().nextInt(1000)+" Dummy Expense Name");
+		driver.hideKeyboard();
+		
+		driver.findElementById("com.twib.online:id/add_expense_edt_details").sendKeys("Dummy Expense Details");
+		driver.hideKeyboard();
+		
+		int expence_amt = new Random().nextInt(500);
+		driver.findElementById(PACKAGE+":id/add_expense_edt_amount").sendKeys(expence_amt+"");
+		driver.hideKeyboard();
+		
+		driver.findElementById("com.twib.online:id/add_expense_btn_photo").click();
+		driver.findElementById("android:id/button2").click();
+		
+		camera_click();
+
+		driver.findElementById("com.twib.online:id/add_expense_btn_add_expense").click();
+		
+		AndroidElement expense_conf = (AndroidElement) new WebDriverWait(driver, 30)
+                .until(ExpectedConditions.visibilityOfElementLocated(By.id("com.twib.online:id/mask_right")));
+		
+		//sucess msg
+		String exp_msg=driver.findElement(By.id("com.twib.online:id/content_text")).getText();
+		
+		if(expense_conf.isDisplayed())
+		{
+			System.out.println(exp_msg);
+		}
+
+		driver.findElementById("com.twib.online:id/confirm_button").click();
+		
+	
+	}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////
+	
+	public void ExpenseList() {
+		
+		ClickMenu(); //Expense Menu
+		driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[5]/android.widget.CheckedTextView").click();
+
+		//get total list of expense
+		List<AndroidElement> expense = (List<AndroidElement>) driver.findElementsById(PACKAGE+":id/expense_list_item_txt_date");
+		System.out.println("Toatl Expense Found : " + expense.size());
+		
+		//Last Expense details
+		String date=driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.LinearLayout/android.widget.RelativeLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout[1]/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.TextView[1]").getText();
+		if(date.equals(date))
+		{
+			System.out.println("The last added expense was on " +date);
+		}
+		
+//		//image click
+//		AndroidElement expImg = (AndroidElement) driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.LinearLayout/android.widget.RelativeLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout[1]/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.ImageView");
+//		expImg.click();
+//		driver.manage().timeouts().implicitlyWait(8, TimeUnit.SECONDS);
+//		driver.findElementById("com.twib.online:id/popup_btn_close").click();
+		// ????? need to check if image exisst or not then trigger click
+		
+	}
+	
+	
+//////////////////////////////////////////////////////////////////////////////
+////////////////////////////	
+	
+	public void ExpenseUpdate() {
+		
+		ClickMenu(); //Expense Menu
+		driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[5]/android.widget.CheckedTextView").click();
+
+
+		//get total list of expense
+		List<AndroidElement> Checkins = (List<AndroidElement>) driver.findElementsById(PACKAGE+":id/expense_list_item_txt_date");
+		if (Checkins.size()>0){
+
+			System.out.println("Expence Found");
+			//overflow menu
+			driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.LinearLayout/android.widget.RelativeLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout[1]/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.ImageButton").click();
+			//com.twib.online:id/overflow_menu
+			///hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.LinearLayout/android.widget.RelativeLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout[1]/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.ImageButton
+		
+			//hit edit button
+			driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[1]/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.TextView").click();
+			//com.twib.online:id/title
+			///hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[1]/android.widget.RelativeLayout/android.widget.TextView
+			
+			
+			//update screen
+			System.out.println("On Update Screen");
+			//com.twib.online:id/add_expense_edt_name
+			//com.twib.online:id/add_expense_edt_details
+//			com.twib.online:id/add_expense_edt_amount
+			
+			AndroidElement add_expense_edt_name = (AndroidElement) new WebDriverWait(driver, 30)
+	                .until(ExpectedConditions.visibilityOfElementLocated(By.id(PACKAGE+":id/add_expense_edt_name")));
+			add_expense_edt_name.clear();
+			add_expense_edt_name.sendKeys(new Random().nextInt(1000)+" Dummy Expense Name");
+			driver.hideKeyboard();
+			
+			driver.findElementById("com.twib.online:id/add_expense_edt_details").clear();
+			driver.findElementById("com.twib.online:id/add_expense_edt_details").sendKeys("Dummy Expense Details");
+			driver.hideKeyboard();
+			
+			int expence_amt = new Random().nextInt(500);
+			driver.findElementById(PACKAGE+":id/add_expense_edt_amount").clear();
+			driver.findElementById(PACKAGE+":id/add_expense_edt_amount").sendKeys(expence_amt+"");
+			driver.hideKeyboard();
+			
+			
+			
+			//com.twib.online:id/add_expense_btn_add_expense
+			driver.findElementById(PACKAGE+":id/add_expense_btn_add_expense").click();
+			
+			//waiting for the loader to finish
+			AndroidElement expense_conf = (AndroidElement) new WebDriverWait(driver, 30)
+	                .until(ExpectedConditions.visibilityOfElementLocated(By.id("com.twib.online:id/mask_right")));
+			
+			//sucess msg
+			String suc_msg=driver.findElement(By.id("com.twib.online:id/content_text")).getText();
+			
+			if(expense_conf.isDisplayed())
+			{
+				System.out.println(suc_msg);
+			}
+
+			driver.findElementById("com.twib.online:id/confirm_button").click();
+			
+		
+		}
+		
+	}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////
+
+	public void ExpenseDelete() throws Exception {
+
+		ClickMenu(); //Expense Menu
+		driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[5]/android.widget.CheckedTextView").click();
+
+		//get total list of expense
+		List<AndroidElement> Checkins = (List<AndroidElement>) driver.findElementsById(PACKAGE+":id/expense_list_item_txt_date");
+		
+		if (Checkins.size()>0){
+			
+			System.out.println("Expence Found");
+			//overflow menu
+			AndroidElement contexMnu = (AndroidElement) driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.LinearLayout/android.widget.RelativeLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout[1]/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.ImageButton");
+			contexMnu.click();
+			//com.twib.online:id/overflow_menu
+			///hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.view.ViewGroup/android.widget.LinearLayout/android.widget.RelativeLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout[1]/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.ImageButton
+		
+			driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+			
+			//delete button
+			//com.twib.online:id/title
+			///hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[1]/android.widget.RelativeLayout/android.widget.TextView
+			AndroidElement delbtn = (AndroidElement) driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.ListView/android.widget.LinearLayout[2]/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.TextView");
+			delbtn.click();
+			take_screenshot();
+			
+				
+			//cancel delete button
+			//com.twib.online:id/cancel_button
+			driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+			driver.findElementById(PACKAGE+":id/cancel_button").click();
+			System.out.println("Expence Delete Cancelled");
+			
+			//driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+			//delete button
+			contexMnu.click();
+			delbtn.click();
+			
+			//confirm delete button
+			//com.twib.online:id/confirm_button
+			driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+			driver.findElementById(PACKAGE+":id/confirm_button").click();
+			System.out.println("Expence Deleted");
+		}
+		
+		else {
+			System.out.println("No Expence Found");
+		}
+		
+		GotoDashboard();
+	}
+	
+	
+	public void LocationOnOff() {
+		
+		//header button
+		//	com.twib.online:id/action_settings
+		
+		ClickMenu(); //menu click
+    	driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[7]/android.widget.CheckedTextView").click();
+    
+
+		
+		//on off button
+		//com.twib.online:id/location_switch_tracking
+		driver.findElementById(PACKAGE+":id/location_switch_tracking").click();
+		//Tracking OFF OFF
+		//Tracking ON ON
+		
+		
+		
+		
+    	AndroidElement location_status=driver.findElementById("com.twib.online:id/location_txt_tracking_message");
+    	
+    	
+	}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	public void ModifyProfile() {
+		
+		//menu click
+		ClickMenu();
+    	//profile image
+    	driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.widget.LinearLayout/android.widget.LinearLayout/android.widget.RelativeLayout/android.widget.LinearLayout/android.widget.ImageView").click();
+
+    	ClickMenu();
+    	//profile menu
+    	driver.findElementByXPath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[8]/android.widget.CheckedTextView").click();
+		
+	   WebDriverWait wait1= new WebDriverWait(driver,20);
+				wait1.until(ExpectedConditions.visibilityOfElementLocated(By.id("com.twib.online:id/update_profile_edt_name"))).clear();
+			
+		driver.findElementById("com.twib.online:id/update_profile_edt_name").sendKeys("hello");;
+		driver.hideKeyboard();
+	   
+//		///Camera Image Option
+//		driver.findElementById("com.twib.online:id/update_profile_btn_photo").click();
+//		   
+//		   driver.findElementById("android:id/button2").click();
+//		   
+//		   driver.findElementById("com.android.camera:id/shutter_button_icon").click();			
+//			AndroidElement camera = (AndroidElement) new WebDriverWait(driver, 30)
+//	               .until(ExpectedConditions.visibilityOfElementLocated(By.id("com.android.camera:id/shutter_button_icon")));
+
+//			   driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		
+//			camera.click();
+//			
+//			AndroidElement cam_icon2 = (AndroidElement) new WebDriverWait(driver, 30)
+//	                .until(ExpectedConditions.visibilityOfElementLocated(By.id("com.android.camera:id/review_btn_done")));
+//			
+//			cam_icon2.click();
+			///////////////////////////////////////////////////
+		
+		driver.findElementById("com.twib.online:id/update_profile_btn_update_profile").click();
+		 
+		String message= driver.findElementById("com.twib.online:id/content_text").getText();
+		System.out.println("The message is : " +message);
+
+		AndroidElement confirm_button = (AndroidElement) new WebDriverWait(driver, 30)
+              .until(ExpectedConditions.visibilityOfElementLocated(By.id(PACKAGE+":id/confirm_button")));
+		confirm_button.click();
+			  
+	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///camera click////////////////
+	
+	public void camera_click()
+	{
+
+		driver.findElementById("com.android.camera:id/shutter_button_icon").click();
+		
+		AndroidElement cam_icon = (AndroidElement) new WebDriverWait(driver, 50)
+	            .until(ExpectedConditions.visibilityOfElementLocated(By.id("com.android.camera:id/shutter_button_icon")));
+
+		cam_icon.click();
+		driver.findElementById("com.android.camera:id/review_btn_done").click();
+	}
+	
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////	
+
+	
+	public void Logout() {
+		
+		//header button
+		//com.twib.online:id/action_quit
+		driver.findElementById(PACKAGE+":id/action_quit").click();
+		
+//		//menu click
+		///hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.support.v4.widget.DrawerLayout/android.widget.FrameLayout/android.support.v7.widget.RecyclerView/android.support.v7.widget.LinearLayoutCompat[10]/android.widget.CheckedTextView
+		
+		//yes button
+		driver.findElementById(PACKAGE+":id/confirm_button").click();
+	}
+	
+	
+	
+	
+	//////////////////////////////////////////////////////////////////////////////
+	public void scrollAndClick(String visibleText) {
+	     driver.findElementByAndroidUIAutomator("new UiScrollable(new UiSelector().scrollable(true).instance(0)).scrollIntoView(new UiSelector().textContains(\""+visibleText+"\").instance(0))").click();
+	}
+	
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	public void check_work_type()
+	{
+		List<AndroidElement> Counts = (List<AndroidElement>) driver.findElementsById(PACKAGE+":id/success_tick");
+
+		if(Counts.size()>0)
+		{
+			driver.findElementById("com.twib.online:id/confirm_button").click();
+			System.out.println("user is assigned work without customer");
+		}
+			
+		else  
+		{		
+			
+			driver.findElementById("com.twib.online:id/popup_checkin_btn_dismiss").click();
+			System.out.println("assigned is assigned work with customer");
+			
+		}
+	}
+////////////////////////////////////////////////////////////////////////////////////////////////////////		
+	
+	public void work_to_checkin_type()
+	{
+		List<AndroidElement> Counts = (List<AndroidElement>) driver.findElementsById(PACKAGE+":id/success_tick");
+
+		if(Counts.size()>0)
+		{
+			String work_name= driver.findElementById("com.twib.online:id/title_text").getText();
+			String work_details= driver.findElementById("com.twib.online:id/content_text").getText();
+
+			driver.findElementById("com.twib.online:id/confirm_button").click();
+			System.out.println("user is assigned work without customer");
+		}
+			
+		else  
+		{	
+			String work_name2= driver.findElementById("com.twib.online:id/work_details_popup_txt_work_name").getText();
+			String work_details2= driver.findElementById("com.twib.online:id/work_details_popup_txt_details").getText();
+			
+			driver.findElementById("com.twib.online:id/popup_checkin_btn_dismiss").click();
+			System.out.println("assigned is assigned work with customer");
+			
+		}
+	
+		
+	}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////
+	
+	public void take_screenshot() throws Exception
+	{
+		folder_name ="test screenshots";
+		File source=((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+	     folder_location = "C:/Users/user/Desktop/test screenshots" + source.getName();
+
+		df=new SimpleDateFormat("dd-MM-yyyy");
+		
+		new File(folder_name).mkdir();
+		
+		String file_name=df.format(new Date())+".png";
+		
+		FileUtils.copyFile(source, new File(folder_name + "/" +file_name));
+
+	}
+	
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////	
+	
+    @AfterClass
+    public void tearDown() {
+        //driver.quit();
+    }
+	
+
+}
