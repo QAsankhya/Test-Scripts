@@ -1,0 +1,736 @@
+ package goGigGo;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+
+import io.appium.java_client.android.AndroidDriver;
+
+public class go_gig_go_test
+{
+	
+	WebDriver driver;
+	
+    String dateTime ="12/07/2000";
+
+    /////////****grp_admin*****////////
+    
+	private final String GRP_ADMIN_USERNAME = "9414743870";
+	private final String GRP_ADMIN_PWD="654321";
+	private final String select_birth_year="1998";
+	private final String select_birth_month="May";
+	private final String Date="15";
+	private final String grp_member_pic="D:\\new_pic-1-new-psd (1).jpg";
+	private final String grp_member_pic2="D:\\new_pic-1-new-psd (1).jpg";
+	private final String grp_admin_cv="D:\\sample235.doc";
+	private final String address="balurghat";
+	private final String city="balurghat";
+	private final String zip_code="711201";
+	
+	private final String username="sankhya555@gmail.com";
+	private final String pwd="12345678";
+	private final String cnf_pwd="12345678";
+	private final String recommendations="15";
+	private final String social_preferences="15";
+	private final String orientation="15";
+	private final String service="15";
+	private final String occupation="15";
+	private final String availablility="15";
+	private final String group_size="15";
+	private final String GRP_ADMIN_NEW_PWD="123456";
+	
+	////////////club_members///////////////////////
+	
+	private final String club_member_first_name = "FirstName"+ RandomStringUtils.randomAlphabetic(3);
+	private final String club_member_last_name="LastName"+ RandomStringUtils.randomAlphabetic(3);
+	private final String club_member_mobile="111111111111";
+	private final String club_member_city="random city";
+	private final String club_member_email="sankhya555@gmail.com";
+	private final String club_member_address="random address";
+	private final String club_member_zipcode="123456";
+	private final String club_member_pic="D:\\new_pic-1-new-psd (1).jpg";
+	private final String club_member_pwd="654321";
+	private final String club_member_cnfpwd="654321";
+	
+	
+	private final String select_country="India";
+	private final String select_grp_admin="not active";
+	
+	///product selection
+	private final String select_product="BOOKS";
+	private final String item="Holy Books";
+	private final String enter_amount="2";
+	
+	/////new address during checkout
+	
+	private final String contact_person="demo person";
+	private final String contact_email="sankhya555@gmail.com";
+	private final String contact_mobile="1234567890";
+	private final String contact_address="demo address";
+	private final String contact_city="demo city";
+	private final String contact_zip_code="123456";
+	private final String contact_country="India";
+
+	//////wishlist details
+	
+	private final String enter_wishlist_name="Wishlist"+ RandomStringUtils.randomAlphabetic(3);
+	
+	//////change pwd for club member//////////
+	private final String club_member_new_pwd="123456";
+
+	
+	@BeforeTest
+	public void launchGig()
+	{
+
+		
+		System.setProperty("webdriver.gecko.driver","D:\\testing tools\\selenium work\\gecko driver\\geckodriver.exe");
+		driver=new FirefoxDriver();
+		
+		driver.get("https://www.thegigclub.com/?lang=en");
+
+		String currentURL=driver.getCurrentUrl();
+		
+		driver.manage().window().maximize();
+		
+	//	http://192.168.1.10/webdev/go_gig_go/site/?lang=en  (local url)
+	}
+	
+	@Test
+	public void GigTests() throws Throwable
+	{
+		register_grp_admin(); 
+		group_admin_login();
+		about();
+		group_admin_cart_items();
+		grp_admin_change_pwd();
+		grp_admin_manage_groups();
+
+
+	//////*********club_member***********////////
+	
+		club_member_register(); 
+		club_member_login();
+		add_product();
+		club_member_cart();
+		adding_wishlist();
+		club_member_change_pwd();
+	}
+
+///////////////////////////////////////////////////////////////////////////////
+/////register grp admin/////////////////////	
+	
+	public void register_grp_admin()
+
+	{
+		driver.findElement(By.linkText("LOGIN TO GROUP ADMINS")).click();
+		driver.findElement(By.xpath("/html/body/div[5]/div/div/div/div/div/div/form/a[2]")).click();
+
+		
+		//findbrokenLink();
+
+		//driver.findElement(By.xpath("//*[@id=\"group_leader_login\"]/a[2]")).click();
+		
+		driver.findElement(By.id("name")).sendKeys(" Dummy name" +new Random().nextInt(100));
+		
+		driver.findElement(By.name("grp_admin_dob")).click();
+		Select year= new Select(driver.findElement(By.xpath("/html/body/div[8]/div/div/select[2]")));
+		year.selectByVisibleText(select_birth_year);
+		Select month= new Select(driver.findElement(By.xpath("/html/body/div[8]/div/div/select[1]")));
+		month.selectByVisibleText(select_birth_month);
+		select_date();		
+		
+		
+		//driver.findElement(By.xpath("//*[@id=\"grp_admin_login\"]")).click();
+		//driver.findElement(By.xpath("/html/body/div[4]/nav/div/ul/li[1]/a")).click();
+		
+		
+			//driver.findElement(By.className("custom-control custom-radio custom-control-inline")).click();
+		
+		
+			driver.findElement(By.name("mobile")).sendKeys("1234567898090");	
+			driver.findElement(By.name("email")).sendKeys("sankhya555@gmail.com");	
+			
+//	        WebElement uploadPhoto = driver.findElement(By.id("formal_id"));
+//	        uploadPhoto.sendKeys("\"C:\\Users\\user\\Desktop\\manage_image (1).jpg\"");
+
+			WebElement uploadPic = driver.findElement(By.name("formal_id"));
+	        uploadPic.sendKeys(grp_member_pic);
+	        
+
+	        WebElement uploadCV = driver.findElement(By.name("full_cv"));
+	        uploadCV.sendKeys(grp_admin_cv);
+	        
+	        scroll();
+	        WebElement uploadPic2 = driver.findElement(By.name("profile_pic"));
+	        uploadPic2.sendKeys(grp_member_pic2);
+	        
+	        scroll();
+	        driver.findElement(By.name("address")).sendKeys(address);
+	        driver.findElement(By.name("city")).sendKeys(city);
+	        driver.findElement(By.name("zipcode")).sendKeys(zip_code);
+	        
+	        scroll();
+	        Select country=new Select(driver.findElement(By.name("country")));
+			country.selectByVisibleText("India");
+			
+			
+			driver.findElement(By.name("username")).sendKeys(username);
+			driver.findElement(By.name("password")).sendKeys(pwd);
+			driver.findElement(By.name("confirm_password")).sendKeys(cnf_pwd);
+			driver.findElement(By.name("recommendations")).sendKeys(recommendations);
+			driver.findElement(By.name("social_preferences")).sendKeys(social_preferences);
+			driver.findElement(By.name("orientation")).sendKeys(orientation);
+			driver.findElement(By.name("service")).sendKeys(service);
+	        driver.findElement(By.name("occupation")).sendKeys(occupation);
+	        driver.findElement(By.name("availablility")).sendKeys(availablility);
+	        driver.findElement(By.name("group_size")).sendKeys(group_size);
+	        driver.findElement(By.name("storage_space")).click();
+	        
+	        ((JavascriptExecutor)driver).executeScript("scroll(0,6200)");  ///scroll to register button
+
+	        driver.findElement(By.name("submit")).click();
+	        
+	        
+	}
+	
+////////////////////////////////////////////////////////////////////////////////////
+
+	
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/////login///////
+	
+	public void group_admin_login()
+	{
+		
+		driver.findElement(By.linkText("LOGIN TO GROUP ADMINS")).click();
+		
+		
+		driver.findElement(By.id("login_id")).sendKeys(GRP_ADMIN_USERNAME);
+		driver.findElement(By.id("password")).sendKeys(GRP_ADMIN_PWD);
+		driver.findElement(By.name("submit")).click();
+		
+		String grp_admin=driver.findElement(By.className("form-group")).getText();
+		
+		System.out.println(grp_admin);
+		
+		//findbrokenLink();
+
+	}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////	
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////about/////////////////	
+	public void about()
+	{
+		driver.findElement(By.xpath("/html/body/div[4]/nav/div/ul/li[1]/a")).click();
+		
+		WebElement ele1=driver.findElement(By.linkText("MEHADRIN FOOD"));
+		WebElement ele2=driver.findElement(By.linkText("FOOD"));
+		WebElement ele3=driver.findElement(By.linkText("APPAREL"));
+		WebElement ele4=driver.findElement(By.linkText("BOOKS"));
+		WebElement ele5=driver.findElement(By.linkText("ALL FOR HOME & GARDEN"));
+		WebElement ele6=driver.findElement(By.linkText("COMPUTERS AND ELECTRONICS"));
+		WebElement ele7=driver.findElement(By.linkText("SUBSCRIPTIONS"));
+		WebElement ele8=driver.findElement(By.linkText("MORE"));
+
+		
+//////mouser hover//////
+
+		Actions act=new Actions(driver);
+		act.moveToElement(ele1).perform();
+		link_verify();
+		act.moveToElement(ele2).perform();
+		link_verify();
+		act.moveToElement(ele3).perform();
+		link_verify();
+		act.moveToElement(ele4).perform();
+		link_verify();
+		act.moveToElement(ele5).perform();
+		link_verify();
+		act.moveToElement(ele6).perform();
+		link_verify();
+		act.moveToElement(ele7).perform();
+		link_verify();
+		act.moveToElement(ele8).perform();
+		link_verify();
+
+		
+	}
+
+	
+	
+/////////////////////////////////////////////////////////////////////////////
+////shopping cart////////
+	
+	public void group_admin_cart_items()
+	{
+		
+		
+		driver.findElement(By.linkText("ABOUT")).click();
+		WebElement ele=driver.findElement(By.linkText("BOOKS"));
+		
+		Actions act=new Actions(driver);
+		act.moveToElement(ele).perform();
+		
+		WebElement SUB_ELE=driver.findElement(By.linkText("Holy Books"));
+		SUB_ELE.click();	
+		
+		
+	}
+
+	
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//////change password////////////////
+	
+	public void grp_admin_change_pwd()
+	{
+		driver.findElement(By.linkText("MY ACCOUNT")).click();
+		ClickMenu();
+		driver.findElement(By.linkText("Settings")).click();
+		driver.findElement(By.linkText("Change password")).click();
+		
+		driver.findElement(By.name("o_password")).sendKeys(GRP_ADMIN_PWD);
+		driver.findElement(By.name("n_password")).sendKeys(GRP_ADMIN_NEW_PWD);
+		driver.findElement(By.name("c_password")).sendKeys(GRP_ADMIN_NEW_PWD);
+		driver.findElement(By.name("submit")).click();
+		
+		ClickMenu();
+			driver.findElement(By.linkText("Logout")).click();
+			driver.findElement(By.name("login_id")).sendKeys(GRP_ADMIN_USERNAME);
+			driver.findElement(By.name("password")).sendKeys(GRP_ADMIN_PWD);
+			driver.findElement(By.name("submit")).click();
+		
+			if(driver.findElement(By.className("e_message")).isDisplayed())
+			{
+				driver.findElement(By.name("login_id")).sendKeys(GRP_ADMIN_USERNAME);
+				driver.findElement(By.name("password")).sendKeys(GRP_ADMIN_NEW_PWD);
+				driver.findElement(By.name("submit")).click();
+			
+			ClickMenu();
+				driver.findElement(By.linkText("Settings")).click();
+				driver.findElement(By.linkText("Change password")).click();
+			
+				driver.findElement(By.name("o_password")).sendKeys(GRP_ADMIN_NEW_PWD);
+				driver.findElement(By.name("n_password")).sendKeys(GRP_ADMIN_PWD);
+				driver.findElement(By.name("c_password")).sendKeys(GRP_ADMIN_PWD);
+				driver.findElement(By.name("submit")).click();
+			}
+
+	}
+	
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////manage group////////////////////////
+	
+	public void grp_admin_manage_groups()
+	
+	{
+		driver.findElement(By.linkText("MY ACCOUNT")).click();
+		
+		ClickMenu();
+		driver.findElement(By.linkText("Manage Groups")).click();
+		Select group=new Select(driver.findElement(By.name("group_id")));
+		group.selectByVisibleText(select_grp_admin);
+		
+		driver.findElement(By.name("submit")).click();
+		
+		 ((JavascriptExecutor)driver).executeScript("scroll(0,350)"); 
+		 driver.findElement(By.xpath("//div[@class='col-lg-12 grid-list-view']//div[4]//div[1]//div[2]//div[2]//button[1]")).click();
+		 
+		 driver.findElement(By.linkText("MY ACCOUNT")).click();
+			
+			ClickMenu();
+			 driver.findElement(By.linkText("Logout")).click();
+
+	}
+	
+	
+	
+	
+	
+	
+/////////////////club member registration//////////////////////////////////
+	
+	public void club_member_register()
+	{
+		driver.findElement(By.linkText("JOINING THE CLUB")).click();
+		driver.findElement(By.name("first_name")).sendKeys(club_member_first_name);
+		driver.findElement(By.name("last_name")).sendKeys(club_member_last_name);
+		driver.findElement(By.name("mobile_1")).sendKeys(club_member_mobile);
+		driver.findElement(By.name("email")).sendKeys(club_member_email);
+		driver.findElement(By.name("address")).sendKeys(club_member_address);
+	
+		
+		Select country=new Select(driver.findElement(By.name("country")));
+		country.selectByVisibleText(select_country);
+		driver.findElement(By.name("city")).sendKeys(club_member_city);
+		driver.findElement(By.name("zipcode")).sendKeys(club_member_zipcode);
+		
+		Select group=new Select(driver.findElement(By.name("group_id")));
+		group.selectByVisibleText(select_grp_admin);
+		
+		WebElement uploadPic = driver.findElement(By.name("formal_id"));
+        uploadPic.sendKeys(club_member_pic);
+        driver.findElement(By.id("username")).sendKeys(club_member_email);
+        scroll();
+		
+		driver.findElement(By.name("password")).sendKeys(club_member_pwd);
+		driver.findElement(By.name("confirm_password")).sendKeys(club_member_cnfpwd);
+		((JavascriptExecutor)driver).executeScript("scroll(0,5500)");  ///scroll to register button
+		
+		driver.findElement(By.name("add")).click();
+//		driver.findElement(By.name("proceed_to_register")).click();
+		
+//		WebElement element =driver.findElement(By.name(element_in_registration));
+//
+//		je.executeScript("arguments[0].scrollIntoView(true);",element);
+		 
+
+				//Where ‘element’ is the locator where you want to scroll.
+	}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////login//////////////////////
+	
+	public void club_member_login()
+	{
+		String currentURL=driver.getCurrentUrl();
+		driver.findElement(By.linkText("LOGIN TO CLUB MEMBERS")).click();
+		
+		driver.findElement(By.name("login_id")).sendKeys(club_member_email);
+		driver.findElement(By.name("password")).sendKeys(club_member_pwd);
+		driver.findElement(By.name("submit")).click();
+		
+		//findbrokenLink();
+
+	}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	public void add_product() throws Throwable
+	{
+		
+		driver.findElement(By.linkText("ABOUT")).click();
+
+		WebElement ele=driver.findElement(By.linkText(select_product));
+		
+		Actions act=new Actions(driver);
+		act.moveToElement(ele).perform();
+		
+		driver.findElement(By.linkText(item)).click();
+		waitForLoad(driver);
+		
+		((WebDriver) driver).manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+		
+		driver.findElement(By.className("product-img")).click();
+		
+		String availablity=driver.findElement(By.className("s_msg")).getText();
+		System.out.println(" Status of the product:  "+availablity);
+		
+		driver.findElement(By.name("qty")).clear();
+		driver.findElement(By.name("qty")).sendKeys(enter_amount);
+		
+		driver.findElement(By.xpath("/html/body/div[5]/div/div/div[3]/div/div/div[2]/div/div/div/div[2]/div[2]/div/button")).click(); 
+		
+    	Thread.sleep(4000);
+			System.out.println(" Item Successfully added to cart");
+		
+		
+		
+		
+		
+
+	}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+	 public void club_member_cart()
+	 {
+		
+		driver.findElement(By.linkText("ABOUT")).click();
+		 driver.findElement(By.xpath("/html/body/div[4]/nav/div/ul/li[4]/a")).click();
+		 
+		 List<WebElement> count = driver.findElements(By.name("product_name"));
+
+		 System.out.println(count.size());
+		
+//		 if(count.size()>0)
+//		 {
+//			 for(int i=1;i<=count.size();i++)
+//			 {
+//		 	
+//			
+//			String item_names=	driver.findElement(By.name("product_name")).getText();
+//			 System.out.println(item_names);
+//		 
+//			 }
+//		 }
+		 
+		 driver.findElement(By.id("item_quantity_M05pN2hHVU9JaWtRM3p6TzkrUkR5UT09")).clear();
+		 driver.findElement(By.id("item_quantity_M05pN2hHVU9JaWtRM3p6TzkrUkR5UT09")).sendKeys("5"); 	 
+		
+		 driver.findElement(By.id("proceed_to_checkout")).click();
+	 
+		
+			
+		        ((JavascriptExecutor)driver).executeScript("scroll(0,6200)"); 
+			 driver.findElement(By.name("checkout")).click();
+
+
+		
+		 
+		 
+		 
+
+		// new_address();   //in case user wants to add new address
+		
+	 }
+		 
+///////////////////////////////////////////////////////////////////////////////////////////////
+/////adding to wishlist//////////
+	 
+	 public void adding_wishlist()
+	 {
+		 driver.findElement(By.linkText("ABOUT")).click();
+		 driver.findElement(By.xpath("/html/body/div[4]/nav/div/ul/li[4]/a")).click();
+		 
+		 List<WebElement> count = driver.findElements(By.name("product_name"));
+
+		 System.out.println(count.size());
+		 
+		 driver.findElement(By.id("copy_to_wishlist")).click();
+		 
+		 driver.findElement(By.id("new_list_new")).click();
+		 driver.findElement(By.id("wishlist_name_new")).sendKeys(enter_wishlist_name);
+		 driver.findElement(By.xpath("/html/body/div[5]/div/div/div[2]/div/div/div[2]/form/button")).click();
+		 
+		 driver.findElement(By.linkText("MY ACCOUNT")).click();
+		 ClickMenu();
+		 driver.findElement(By.linkText("My Shopping Lists")).click();
+		 waitForLoad(driver);
+		 driver.findElement(By.linkText("View")).click();
+		 String msg=driver.findElement(By.className("cart-buttons-container")).getText();
+		 
+		 System.out.println("Status: " +msg);
+		
+		 driver.findElement(By.className("login_btn02")).click();
+		 driver.findElement(By.linkText("Delete")).click();
+		 
+		 Alert alert = driver.switchTo().alert();
+		 alert.accept();
+	 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////club member change pwd///////////////
+	 
+	 public void club_member_change_pwd()
+		{
+			driver.findElement(By.linkText("MY ACCOUNT")).click();
+			ClickMenu();
+			driver.findElement(By.linkText("Settings")).click();
+			driver.findElement(By.linkText("Change password")).click();
+			
+			driver.findElement(By.name("o_password")).sendKeys(club_member_pwd);
+			driver.findElement(By.name("n_password")).sendKeys(club_member_new_pwd);
+			driver.findElement(By.name("c_password")).sendKeys(club_member_new_pwd);
+			driver.findElement(By.name("submit")).click();
+			
+			ClickMenu();
+				driver.findElement(By.linkText("Logout")).click();
+				driver.findElement(By.name("login_id")).sendKeys(club_member_email);
+				driver.findElement(By.name("password")).sendKeys(club_member_pwd);
+				driver.findElement(By.name("submit")).click();
+			
+				if(driver.findElement(By.className("e_message")).isDisplayed())
+				{
+					driver.findElement(By.name("login_id")).sendKeys(club_member_email);
+					driver.findElement(By.name("password")).sendKeys(club_member_new_pwd);
+					driver.findElement(By.name("submit")).click();
+				
+				ClickMenu();
+					driver.findElement(By.linkText("Settings")).click();
+					driver.findElement(By.linkText("Change password")).click();
+				
+					driver.findElement(By.name("o_password")).sendKeys(club_member_new_pwd);
+					driver.findElement(By.name("n_password")).sendKeys(club_member_pwd);
+					driver.findElement(By.name("c_password")).sendKeys(club_member_pwd);
+					driver.findElement(By.name("submit")).click();
+				}
+
+		}
+	 
+///////////////////////////////////////////////////////////////////////////////////////////////
+/////selecting a new address//////	
+	 
+	 public void new_address()
+	 {
+		 driver.findElement(By.id("contact_person")).sendKeys(contact_person);
+		 driver.findElement(By.id("email")).sendKeys(contact_email);
+		 driver.findElement(By.id("mobile")).sendKeys(contact_mobile);
+		 driver.findElement(By.id("address")).sendKeys(contact_address);
+		 driver.findElement(By.id("city")).sendKeys(contact_city);
+		 driver.findElement(By.id("zip_code")).sendKeys(contact_zip_code);
+		 Select country=new Select(driver.findElement(By.id("country")));
+			country.selectByVisibleText(contact_country);
+
+		 driver.findElement(By.name("submit")).click();
+		 ((JavascriptExecutor)driver).executeScript("scroll(0,600)");		 
+			
+		 driver.findElement(By.id("proceed_to_checkout")).click();
+	 
+		 waitForLoad(driver);
+		 
+		
+		
+		 /////check items added to wishlist
+		 
+		 
+		 
+		 
+	 }
+		
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//////verify short links///////////////
+	
+	
+	public void link_verify()
+	{
+		List<WebElement> links=driver.findElements(By.className("nav-item"));
+		int total_count=links.size();
+		
+		for(int i=0;i<links.size();i++)
+		{
+			WebElement element=links.get(i);
+			String text=element.getAttribute("innerHTML");
+			System.out.println("The link name is:" +text);
+		}
+	}
+	
+	
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//////broken links verification////////
+	
+	public void findbrokenLink()
+	
+	{
+		
+		List<WebElement> links=driver.findElements(By.tagName("a"));
+		
+		System.out.println("Total links are "+links.size());
+		
+		for(int i=0;i<links.size();i++)
+		{
+			
+			WebElement ele= links.get(i);
+			
+			String url=ele.getAttribute("href");
+			
+			verifyLinkActive(url);
+			
+		
+		}
+	}
+	
+	public static void verifyLinkActive(String linkUrl)
+	{
+        try 
+        {
+           URL url = new URL(linkUrl);
+           
+           HttpURLConnection httpURLConnect=(HttpURLConnection)url.openConnection();
+           
+           httpURLConnect.setConnectTimeout(3000);
+           
+           httpURLConnect.connect();
+           
+           if(httpURLConnect.getResponseCode()==200)
+           {
+               System.out.println(linkUrl+" - "+httpURLConnect.getResponseMessage());
+            }
+          if(httpURLConnect.getResponseCode()==HttpURLConnection.HTTP_NOT_FOUND)  
+           {
+               System.out.println(linkUrl+" - "+httpURLConnect.getResponseMessage() + " - "+ HttpURLConnection.HTTP_NOT_FOUND);
+            }
+        } catch (Exception e)
+        {
+        	//System.out.println("test successful");  
+        	
+        }
+    } 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+////////select date2///////////////
+	
+	public void select_date()
+	{
+	List<WebElement> allDates=driver.findElements(By.className("ui-state-default"));
+
+	int total_nodes=allDates.size();
+	
+	for(int i=0;i<total_nodes;i++)
+	{
+		String date=allDates.get(i).getText();
+		
+		
+		
+		if(date.equals(Date))
+		{
+			allDates.get(i).click();
+		}
+	}
+	}
+	
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////scroll by pixel/////////	 
+
+	public void scroll()
+	{
+		((JavascriptExecutor)driver).executeScript("scroll(0,200)");
+
+	}	
+//////////////////////////////////////////////////////////////////////////////////////////////////////    
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////wait for load/////////
+
+	public static void waitForLoad(WebDriver driver) {
+		ExpectedCondition<Boolean> pageLoadCondition = new
+				ExpectedCondition<Boolean>() {
+			public Boolean apply(WebDriver driver) {
+				return ((JavascriptExecutor)driver).executeScript("return document.readyState").equals("complete");
+			}
+		};
+		WebDriverWait wait = new WebDriverWait(driver, 30);
+		wait.until(pageLoadCondition);
+	}
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//////click menu///////////
+
+	public void ClickMenu()
+	{
+		driver.findElement(By.id("sidebarCollapse")).click();
+	}
+	
+	
+	
+	//	 @AfterTest
+//	    public void teardown() {
+//	        driver.close();
+//	    }
+    }
