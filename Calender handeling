@@ -1,0 +1,21 @@
+
+
+///if month and year are in dropdown we can handle as we handle normal drop downs/////
+    /////the following code is to select any particular date/////////
+
+
+public void select_date()
+	{
+	List<WebElement> allDates=driver.findElements(By.className("ui-state-default"));
+
+	int total_nodes=allDates.size();
+	
+	for(int i=0;i<total_nodes;i++)
+	{
+		String date=allDates.get(i).getText();
+		if(date.equals(Date))
+		{
+			allDates.get(i).click();
+		}
+	}
+	
