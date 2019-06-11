@@ -1,0 +1,22 @@
+******/////following code allows to select a numeric date from a claender//////////*******
+  *****selecting months and years can be done as we do in handeling dropdowns********
+
+
+
+
+
+
+public void select_date()
+	{
+	List<WebElement> allDates=driver.findElements(By.className("ui-state-default"));
+
+	int total_nodes=allDates.size();
+	
+	for(int i=0;i<total_nodes;i++)
+	{
+		String date=allDates.get(i).getText();
+		if(date.equals(Date))
+		{
+			allDates.get(i).click();
+		}
+	}
