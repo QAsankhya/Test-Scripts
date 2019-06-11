@@ -1,0 +1,16 @@
+//*****following code allows the browser to wait for the page to load********//
+
+
+
+
+public static void waitForLoad(WebDriver driver)
+{
+	    ExpectedCondition<Boolean> pageLoadCondition = new
+	            ExpectedCondition<Boolean>() {
+	                public Boolean apply(WebDriver driver) {
+	                    return ((JavascriptExecutor)driver).executeScript("return document.readyState").equals("complete");
+	                }
+	            };
+	    WebDriverWait wait = new WebDriverWait(driver, 30);
+	    wait.until(pageLoadCondition);
+	}
