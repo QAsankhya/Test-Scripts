@@ -1,0 +1,24 @@
+public void database_error() throws IOException, Exception 
+	{
+		List<WebElement> links = driver.findElements(By.tagName("a"));
+        System.out.println("Number of links : " + links.size());
+        for(WebElement e : links) {
+            String linkText = e.getAttribute("href");
+            System.out.println("Link -->>" +linkText);
+            if(linkText!=null && !linkText.isEmpty()) {
+                HttpPost post = new HttpPost(linkText);
+                HttpClient client = HttpClientBuilder.create().build();
+                HttpResponse res = client.execute(post);
+                String s = res.getStatusLine().toString();
+                if(s.equals("HTTP/1.1 200 OK") && driver.getTitle()!="Database Error") {
+                    System.out.println("Navigated");
+                    
+                   //your code to handle logic 
+                } else {
+                    //your code to handle logic with other response code
+                	System.out.println("database error found in: " +s);
+                }
+            }
+        }
+    } 
+  
