@@ -1,0 +1,66 @@
+public void select_date(int j) throws Throwable
+	{
+		
+		WebElement previous=driver.findElement(By.xpath("/html/body/div[3]/div[1]/table/thead/tr[2]/th[1]"));
+		WebElement pre_previous=driver.findElement(By.xpath("/html/body/div[3]/div[2]/table/thead/tr[2]/th[1]"));
+		WebElement middle=driver.findElement(By.xpath("/html/body/div[3]/div[1]/table/thead/tr[2]/th[2]"));
+		WebElement next=driver.findElement(By.xpath("/html/body/div[3]/div[1]/table/thead/tr[2]/th[3]"));
+		WebElement post_next=driver.findElement(By.xpath("/html/body/div[3]/div[2]/table/thead/tr[2]/th[3]"));
+
+
+        String date_dd_MM_yyyy[] = (date_of_birth.split(" ")[0]).split("/");
+
+		int yearDiff = Integer.parseInt(date_dd_MM_yyyy[2])- Calendar.getInstance().get(Calendar.YEAR);
+
+		middle.click();
+
+        if(yearDiff!=0){
+
+            //if you have to move next year
+
+            if(yearDiff>0){
+
+                for(int i=0;i< yearDiff;i++){
+
+                    System.out.println("Year Diff->"+i);
+
+                    post_next.click();
+
+                }
+
+            }
+
+            //if you have to move previous year
+
+            else if(yearDiff<0){
+
+                for(int i=0;i< (yearDiff*(-1));i++){
+
+                    System.out.println("Year Diff->"+i);
+
+                    pre_previous.click();
+
+                }
+
+            }
+
+        }
+        
+        Thread.sleep(1000);
+
+        //Get all months from calendar to select correct one
+
+        List<WebElement> list_AllMonthToBook = driver.findElements(By.className("month"));
+        
+        list_AllMonthToBook.get(Integer.parseInt(date_dd_MM_yyyy[1])-1).click();
+        
+        Thread.sleep(1000);
+
+        //get all dates from calendar to select correct one
+
+        List<WebElement> list_AllDateToBook = driver.findElements(By.className("day"));
+        
+        list_AllDateToBook.get(Integer.parseInt(date_dd_MM_yyyy[0])-1).click();
+        
+	}
+	
